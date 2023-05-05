@@ -24,7 +24,7 @@ from spare.util.ints import uint16, uint32, uint64
 from spare.wallet.puzzles.load_clvm import load_serialized_clvm_maybe_recompile
 
 DESERIALIZE_MOD = load_serialized_clvm_maybe_recompile(
-    "chialisp_deserialisation.clsp", package_or_requirement="chia.wallet.puzzles"
+    "chialisp_deserialisation.clsp", package_or_requirement="spare.wallet.puzzles"
 )
 
 log = logging.getLogger(__name__)

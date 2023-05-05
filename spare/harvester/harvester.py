@@ -24,8 +24,8 @@ from spare.plotting.util import (
 )
 from spare.rpc.rpc_server import StateChangedProtocol, default_get_connections
 from spare.server.outbound_message import NodeType
-from spare.server.server import ChiaServer
-from spare.server.ws_connection import WSChiaConnection
+from spare.server.server import SpareServer
+from spare.server.ws_connection import WSSpareConnection
 
 log = logging.getLogger(__name__)
 
@@ -40,10 +40,10 @@ class Harvester:
     constants: ConsensusConstants
     _refresh_lock: asyncio.Lock
     event_loop: asyncio.events.AbstractEventLoop
-    _server: Optional[ChiaServer]
+    _server: Optional[SpareServer]
 
     @property
-    def server(self) -> ChiaServer:
+    def server(self) -> SpareServer:
         # This is a stop gap until the class usage is refactored such the values of
         # integral attributes are known at creation of the instance.
         if self._server is None:
@@ -97,7 +97,7 @@ class Harvester:
     def get_connections(self, request_node_type: Optional[NodeType]) -> List[Dict[str, Any]]:
         return default_get_connections(server=self.server, request_node_type=request_node_type)
 
-    async def on_connect(self, connection: WSChiaConnection) -> None:
+    async def on_connect(self, connection: WSSpareConnection) -> None:
         self.state_changed("add_connection")
 
     def _set_state_changed_callback(self, callback: StateChangedProtocol) -> None:
@@ -123,7 +123,7 @@ class Harvester:
         if event == PlotRefreshEvents.done:
             self.plot_sync_sender.sync_done(update_result.removed, update_result.duration)
 
-    def on_disconnect(self, connection: WSChiaConnection) -> None:
+    def on_disconnect(self, connection: WSSpareConnection) -> None:
         self.log.info(f"peer disconnected {connection.get_peer_logging()}")
         self.state_changed("close_connection")
         self.plot_sync_sender.stop()
@@ -178,5 +178,5 @@ class Harvester:
         self.plot_manager.trigger_refresh()
         return True
 
-    def set_server(self, server: ChiaServer) -> None:
+    def set_server(self, server: SpareServer) -> None:
         self._server = server

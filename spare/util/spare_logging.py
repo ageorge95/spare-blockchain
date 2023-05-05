@@ -8,7 +8,7 @@ from typing import Any, Dict, List, Optional
 import colorlog
 from concurrent_log_handler import ConcurrentRotatingFileHandler
 
-from spare.cmds.init_funcs import chia_full_version_str
+from spare.cmds.init_funcs import spare_full_version_str
 from spare.util.default_root import DEFAULT_ROOT_PATH
 from spare.util.path import path_from_root
 
@@ -17,7 +17,7 @@ default_log_level = "WARNING"
 
 def get_beta_logging_config() -> Dict[str, Any]:
     return {
-        "log_filename": f"{chia_full_version_str()}/chia-blockchain/beta.log",
+        "log_filename": f"{spare_full_version_str()}/spare-blockchain/beta.log",
         "log_level": "DEBUG",
         "log_stdout": False,
         "log_maxfilesrotation": 100,

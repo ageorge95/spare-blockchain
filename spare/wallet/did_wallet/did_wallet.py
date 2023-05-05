@@ -13,7 +13,7 @@ from blspy import AugSchemeMPL, G1Element, G2Element
 from spare.full_node.full_node_api import FullNodeAPI
 from spare.protocols import wallet_protocol
 from spare.protocols.wallet_protocol import CoinState
-from spare.server.ws_connection import WSChiaConnection
+from spare.server.ws_connection import WSSpareConnection
 from spare.types.announcement import Announcement
 from spare.types.blockchain_format.coin import Coin
 from spare.types.blockchain_format.program import Program
@@ -373,7 +373,7 @@ class DIDWallet:
     # We can improve this interface by passing in the CoinSpend, as well
     # We need to change DID Wallet coin_added to expect p2 spends as well as recovery spends,
     # or only call it in the recovery spend case
-    async def coin_added(self, coin: Coin, _: uint32, peer: WSChiaConnection):
+    async def coin_added(self, coin: Coin, _: uint32, peer: WSSpareConnection):
         """Notification from wallet state manager that wallet has been received."""
 
         parent = self.get_parent_for_coin(coin)
@@ -632,16 +632,16 @@ class DIDWallet:
         spend_bundle = await self.sign(unsigned_spend_bundle)
         if fee > 0:
             announcement_to_make = coin.name()
-            chia_tx = await self.standard_wallet.create_tandem_xch_tx(
+            spare_tx = await self.standard_wallet.create_tandem_spare_tx(
                 fee, Announcement(coin.name(), announcement_to_make), reuse_puzhash=reuse_puzhash
             )
         else:
             announcement_to_make = None
-            chia_tx = None
-        if chia_tx is not None and chia_tx.spend_bundle is not None:
-            spend_bundle = SpendBundle.aggregate([spend_bundle, chia_tx.spend_bundle])
-            chia_tx = dataclasses.replace(chia_tx, spend_bundle=None)
-            await self.wallet_state_manager.add_pending_transaction(chia_tx)
+            spare_tx = None
+        if spare_tx is not None and spare_tx.spend_bundle is not None:
+            spend_bundle = SpendBundle.aggregate([spend_bundle, spare_tx.spend_bundle])
+            spare_tx = dataclasses.replace(spare_tx, spend_bundle=None)
+            await self.wallet_state_manager.add_pending_transaction(spare_tx)
         did_record = TransactionRecord(
             confirmed_at_height=uint32(0),
             created_at_time=uint64(int(time.time())),
@@ -735,15 +735,15 @@ class DIDWallet:
         spend_bundle = await self.sign(unsigned_spend_bundle)
         if fee > 0:
             announcement_to_make = coin.name()
-            chia_tx = await self.standard_wallet.create_tandem_xch_tx(
+            spare_tx = await self.standard_wallet.create_tandem_spare_tx(
                 fee, Announcement(coin.name(), announcement_to_make), reuse_puzhash=reuse_puzhash
             )
         else:
-            chia_tx = None
-        if chia_tx is not None and chia_tx.spend_bundle is not None:
-            spend_bundle = SpendBundle.aggregate([spend_bundle, chia_tx.spend_bundle])
-            chia_tx = dataclasses.replace(chia_tx, spend_bundle=None)
-            await self.wallet_state_manager.add_pending_transaction(chia_tx)
+            spare_tx = None
+        if spare_tx is not None and spare_tx.spend_bundle is not None:
+            spend_bundle = SpendBundle.aggregate([spend_bundle, spare_tx.spend_bundle])
+            spare_tx = dataclasses.replace(spare_tx, spend_bundle=None)
+            await self.wallet_state_manager.add_pending_transaction(spare_tx)
         did_record = TransactionRecord(
             confirmed_at_height=uint32(0),
             created_at_time=uint64(int(time.time())),

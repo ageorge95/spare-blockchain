@@ -12,7 +12,7 @@ from spare.protocols.protocol_message_types import ProtocolMessageTypes
 log = logging.getLogger(__name__)
 
 system_delays = {
-    # based on data from https://github.com/Chia-Network/chia-blockchain/pull/13724
+    # based on data from https://github.com/Spare-Network/spare-blockchain/pull/13724
     "github": {
         "darwin": 20,
         "linux": 1,

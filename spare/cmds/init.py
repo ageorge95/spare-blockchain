@@ -16,7 +16,7 @@ import click
     is_flag=True,
     help="Attempt to fix SSL certificate/key file permissions",
 )
-@click.option("--testnet", is_flag=True, help="Configure this chia install to connect to the testnet")
+@click.option("--testnet", is_flag=True, help="Configure this spare install to connect to the testnet")
 @click.option("--set-passphrase", "-s", is_flag=True, help="Protect your keyring with a passphrase")
 @click.option(
     "--v1-db",
@@ -37,12 +37,12 @@ def init_cmd(
 
     \b
     Follow these steps to create new certificates for a remote harvester:
-    - Make a copy of your Farming Machine CA directory: ~/.chia/[version]/config/ssl/ca
-    - Shut down all chia daemon processes with `chia stop all -d`
-    - Run `chia init -c [directory]` on your remote harvester,
+    - Make a copy of your Farming Machine CA directory: ~/.spare/[version]/config/ssl/ca
+    - Shut down all spare daemon processes with `spare stop all -d`
+    - Run `spare init -c [directory]` on your remote harvester,
       where [directory] is the the copy of your Farming Machine CA directory
-    - Get more details on remote harvester on Chia wiki:
-      https://github.com/Chia-Network/chia-blockchain/wiki/Farming-on-many-machines
+    - Get more details on remote harvester on Spare wiki:
+      https://github.com/Spare-Network/spare-blockchain/wiki/Farming-on-many-machines
     """
     from pathlib import Path
 
@@ -65,6 +65,6 @@ def init_cmd(
 if __name__ == "__main__":
     from spare.util.default_root import DEFAULT_ROOT_PATH
 
-    from .init_funcs import chia_init
+    from .init_funcs import spare_init
 
-    chia_init(DEFAULT_ROOT_PATH)
+    spare_init(DEFAULT_ROOT_PATH)

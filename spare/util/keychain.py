@@ -28,8 +28,8 @@ from spare.util.keyring_wrapper import KeyringWrapper
 from spare.util.streamable import Streamable, streamable
 
 CURRENT_KEY_VERSION = "1.8"
-DEFAULT_USER = f"user-chia-{CURRENT_KEY_VERSION}"  # e.g. user-chia-1.8
-DEFAULT_SERVICE = f"chia-{DEFAULT_USER}"  # e.g. chia-user-chia-1.8
+DEFAULT_USER = f"user-spare-{CURRENT_KEY_VERSION}"  # e.g. user-spare-1.8
+DEFAULT_SERVICE = f"spare-{DEFAULT_USER}"  # e.g. spare-user-spare-1.8
 MAX_KEYS = 100
 MIN_PASSPHRASE_LEN = 8
 

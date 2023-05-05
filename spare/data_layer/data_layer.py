@@ -39,8 +39,8 @@ from spare.data_layer.download_data import insert_from_delta_file, write_files_f
 from spare.rpc.rpc_server import StateChangedProtocol, default_get_connections
 from spare.rpc.wallet_rpc_client import WalletRpcClient
 from spare.server.outbound_message import NodeType
-from spare.server.server import ChiaServer
-from spare.server.ws_connection import WSChiaConnection
+from spare.server.server import SpareServer
+from spare.server.ws_connection import WSSpareConnection
 from spare.types.blockchain_format.sized_bytes import bytes32
 from spare.util.ints import uint32, uint64
 from spare.util.path import path_from_root
@@ -72,12 +72,12 @@ class DataLayer:
     initialized: bool
     none_bytes: bytes32
     lock: asyncio.Lock
-    _server: Optional[ChiaServer]
+    _server: Optional[SpareServer]
     downloaders: List[str]
     uploaders: List[str]
 
     @property
-    def server(self) -> ChiaServer:
+    def server(self) -> SpareServer:
         # This is a stop gap until the class usage is refactored such the values of
         # integral attributes are known at creation of the instance.
         if self._server is None:
@@ -121,13 +121,13 @@ class DataLayer:
     def _set_state_changed_callback(self, callback: StateChangedProtocol) -> None:
         self.state_changed_callback = callback
 
-    async def on_connect(self, connection: WSChiaConnection) -> None:
+    async def on_connect(self, connection: WSSpareConnection) -> None:
         pass
 
     def get_connections(self, request_node_type: Optional[NodeType]) -> List[Dict[str, Any]]:
         return default_get_connections(server=self.server, request_node_type=request_node_type)
 
-    def set_server(self, server: ChiaServer) -> None:
+    def set_server(self, server: SpareServer) -> None:
         self._server = server
 
     async def _start(self) -> None:

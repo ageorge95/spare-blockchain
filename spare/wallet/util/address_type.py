@@ -8,13 +8,13 @@ from spare.util.config import selected_network_address_prefix
 
 
 class AddressType(Enum):
-    XCH = "xch"
+    SPARE = "spare"
     NFT = "nft"
-    DID = "did:chia:"
+    DID = "did:spare:"
 
     def hrp(self, config: Dict[str, Any]) -> str:
-        if self == AddressType.XCH:
-            # Special case to map XCH to the current network's address prefix
+        if self == AddressType.SPARE:
+            # Special case to map SPARE to the current network's address prefix
             return selected_network_address_prefix(config)
         return self.value
 

@@ -21,7 +21,7 @@ from spare.util.network import WebServer
 from spare.util.path import path_from_root
 from spare.util.setproctitle import setproctitle
 
-# from chia.cmds.chia import monkey_patch_click
+# from spare.cmds.spare import monkey_patch_click
 
 
 # See: https://bugs.python.org/issue29288

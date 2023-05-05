@@ -17,7 +17,7 @@ from spare.util.streamable import Streamable, streamable
 class FeeRate(Streamable):
     """
     Represents Fee Rate in mojos divided by CLVM Cost.
-    Performs XCH/mojo conversion.
+    Performs SPARE/mojo conversion.
     Similar to 'Fee per cost'.
     """
 

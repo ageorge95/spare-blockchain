@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Optional
 
-from spare.server.ws_connection import WSChiaConnection
+from spare.server.ws_connection import WSSpareConnection
 from spare.types.blockchain_format.sized_bytes import bytes32
 from spare.types.spend_bundle import SpendBundle
 
@@ -17,7 +17,7 @@ class TransactionQueueEntry:
     transaction: SpendBundle
     transaction_bytes: Optional[bytes]
     spend_name: bytes32
-    peer: Optional[WSChiaConnection]
+    peer: Optional[WSSpareConnection]
     test: bool
 
     def __lt__(self, other: TransactionQueueEntry) -> bool:

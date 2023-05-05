@@ -20,8 +20,8 @@ from spare.server.address_manager_sqlite_store import create_address_manager_fro
 from spare.server.address_manager_store import AddressManagerStore
 from spare.server.outbound_message import Message, NodeType, make_msg
 from spare.server.peer_store_resolver import PeerStoreResolver
-from spare.server.server import ChiaServer
-from spare.server.ws_connection import WSChiaConnection
+from spare.server.server import SpareServer
+from spare.server.ws_connection import WSSpareConnection
 from spare.types.peer_info import PeerInfo, TimestampedPeerInfo, UnresolvedPeerInfo
 from spare.util.hash import std_hash
 from spare.util.ints import uint16, uint64
@@ -43,7 +43,7 @@ class FullNodeDiscovery:
 
     def __init__(
         self,
-        server: ChiaServer,
+        server: SpareServer,
         target_outbound_count: int,
         peer_store_resolver: PeerStoreResolver,
         introducer_info: Optional[Dict[str, Any]],
@@ -53,7 +53,7 @@ class FullNodeDiscovery:
         default_port: Optional[int],
         log: Logger,
     ) -> None:
-        self.server: ChiaServer = server
+        self.server: SpareServer = server
         self.is_closed = False
         self.target_outbound_count = target_outbound_count
         self.legacy_peer_db_path = peer_store_resolver.legacy_peer_db_path
@@ -137,7 +137,7 @@ class FullNodeDiscovery:
             except Exception as e:
                 self.log.error(f"Error while canceling task.{e} {task}")
 
-    async def on_connect(self, peer: WSChiaConnection) -> None:
+    async def on_connect(self, peer: WSSpareConnection) -> None:
         if (
             peer.is_outbound is False
             and peer.peer_server_port is not None
@@ -164,7 +164,7 @@ class FullNodeDiscovery:
             await peer.send_message(msg)
 
     # Updates timestamps each time we receive a message for outbound connections.
-    async def update_peer_timestamp_on_message(self, peer: WSChiaConnection) -> None:
+    async def update_peer_timestamp_on_message(self, peer: WSSpareConnection) -> None:
         if (
             peer.is_outbound
             and peer.peer_server_port is not None
@@ -202,7 +202,7 @@ class FullNodeDiscovery:
         if self.introducer_info is None:
             return None
 
-        async def on_connect(peer: WSChiaConnection) -> None:
+        async def on_connect(peer: WSSpareConnection) -> None:
             msg = make_msg(ProtocolMessageTypes.request_peers_introducer, RequestPeersIntroducer())
             await peer.send_message(msg)
 
@@ -237,7 +237,7 @@ class FullNodeDiscovery:
         except Exception as e:
             self.log.warning(f"querying DNS introducer failed: {e}")
 
-    async def on_connect_callback(self, peer: WSChiaConnection) -> None:
+    async def on_connect_callback(self, peer: WSSpareConnection) -> None:
         if self.server.on_connect is not None:
             await self.server.on_connect(peer)
         else:
@@ -514,7 +514,7 @@ class FullNodePeers(FullNodeDiscovery):
 
     def __init__(
         self,
-        server: ChiaServer,
+        server: SpareServer,
         target_outbound_count: int,
         peer_store_resolver: PeerStoreResolver,
         introducer_info: Dict[str, Any],
@@ -694,7 +694,7 @@ class FullNodePeers(FullNodeDiscovery):
 class WalletPeers(FullNodeDiscovery):
     def __init__(
         self,
-        server: ChiaServer,
+        server: SpareServer,
         target_outbound_count: int,
         peer_store_resolver: PeerStoreResolver,
         introducer_info: Dict[str, Any],

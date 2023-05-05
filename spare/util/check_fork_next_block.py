@@ -3,15 +3,15 @@ from __future__ import annotations
 from typing import Awaitable, Callable, List
 
 from spare.consensus.blockchain_interface import BlockchainInterface
-from spare.server.ws_connection import WSChiaConnection
+from spare.server.ws_connection import WSSpareConnection
 from spare.util.ints import uint32
 
 
 async def check_fork_next_block(
     blockchain: BlockchainInterface,
     fork_point_height: uint32,
-    peers_with_peak: List[WSChiaConnection],
-    check_block_future: Callable[[WSChiaConnection, uint32, BlockchainInterface], Awaitable[bool]],
+    peers_with_peak: List[WSSpareConnection],
+    check_block_future: Callable[[WSSpareConnection, uint32, BlockchainInterface], Awaitable[bool]],
 ) -> uint32:
     our_peak_height = blockchain.get_peak_height()
     ses_heigths = blockchain.get_ses_heights()

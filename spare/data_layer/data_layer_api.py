@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 
 from spare.data_layer.data_layer import DataLayer
-from spare.server.server import ChiaServer
+from spare.server.server import SpareServer
 
 
 class DataLayerAPI:
@@ -16,7 +16,7 @@ class DataLayerAPI:
     #     self.full_node.state_changed_callback = callback
 
     @property
-    def server(self) -> ChiaServer:
+    def server(self) -> SpareServer:
         return self.data_layer.server
 
     @property

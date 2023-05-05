@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from spare.protocols import full_node_protocol, introducer_protocol, wallet_protocol
 from spare.server.outbound_message import NodeType
-from spare.server.ws_connection import WSChiaConnection
+from spare.server.ws_connection import WSSpareConnection
 from spare.types.mempool_inclusion_status import MempoolInclusionStatus
 from spare.util.api_decorators import api_request
 from spare.util.errors import Err
@@ -24,10 +24,10 @@ class WalletNodeAPI:
         return self.wallet_node.logged_in
 
     @api_request(peer_required=True)
-    async def respond_removals(self, response: wallet_protocol.RespondRemovals, peer: WSChiaConnection):
+    async def respond_removals(self, response: wallet_protocol.RespondRemovals, peer: WSSpareConnection):
         pass
 
-    async def reject_removals_request(self, response: wallet_protocol.RejectRemovalsRequest, peer: WSChiaConnection):
+    async def reject_removals_request(self, response: wallet_protocol.RejectRemovalsRequest, peer: WSSpareConnection):
         """
         The full node has rejected our request for removals.
         """
@@ -41,7 +41,7 @@ class WalletNodeAPI:
         pass
 
     @api_request(peer_required=True, execute_task=True)
-    async def new_peak_wallet(self, peak: wallet_protocol.NewPeakWallet, peer: WSChiaConnection):
+    async def new_peak_wallet(self, peak: wallet_protocol.NewPeakWallet, peer: WSSpareConnection):
         """
         The full node sent as a new peak
         """
@@ -79,7 +79,7 @@ class WalletNodeAPI:
         pass
 
     @api_request(peer_required=True)
-    async def respond_additions(self, response: wallet_protocol.RespondAdditions, peer: WSChiaConnection):
+    async def respond_additions(self, response: wallet_protocol.RespondAdditions, peer: WSSpareConnection):
         pass
 
     @api_request()
@@ -87,7 +87,7 @@ class WalletNodeAPI:
         pass
 
     @api_request(peer_required=True)
-    async def transaction_ack(self, ack: wallet_protocol.TransactionAck, peer: WSChiaConnection):
+    async def transaction_ack(self, ack: wallet_protocol.TransactionAck, peer: WSSpareConnection):
         """
         This is an ack for our previous SendTransaction call. This removes the transaction from
         the send queue if we have sent it to enough nodes.
@@ -122,7 +122,7 @@ class WalletNodeAPI:
 
     @api_request(peer_required=True)
     async def respond_peers_introducer(
-        self, request: introducer_protocol.RespondPeersIntroducer, peer: WSChiaConnection
+        self, request: introducer_protocol.RespondPeersIntroducer, peer: WSSpareConnection
     ):
         if self.wallet_node.wallet_peers is not None:
             await self.wallet_node.wallet_peers.add_peers(request.peer_list, peer.get_peer_info(), False)
@@ -131,7 +131,7 @@ class WalletNodeAPI:
             await peer.close()
 
     @api_request(peer_required=True)
-    async def respond_peers(self, request: full_node_protocol.RespondPeers, peer: WSChiaConnection):
+    async def respond_peers(self, request: full_node_protocol.RespondPeers, peer: WSSpareConnection):
         if self.wallet_node.wallet_peers is None:
             return None
 
@@ -166,7 +166,7 @@ class WalletNodeAPI:
         pass
 
     @api_request(peer_required=True, execute_task=True)
-    async def coin_state_update(self, request: wallet_protocol.CoinStateUpdate, peer: WSChiaConnection):
+    async def coin_state_update(self, request: wallet_protocol.CoinStateUpdate, peer: WSSpareConnection):
         await self.wallet_node.new_peak_queue.full_node_state_updated(request, peer)
 
     # TODO: Review this hinting issue around this rust type not being a Streamable

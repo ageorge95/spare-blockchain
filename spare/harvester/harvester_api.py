@@ -15,7 +15,7 @@ from spare.protocols.farmer_protocol import FarmingInfo
 from spare.protocols.harvester_protocol import Plot, PlotSyncResponse
 from spare.protocols.protocol_message_types import ProtocolMessageTypes
 from spare.server.outbound_message import Message, make_msg
-from spare.server.ws_connection import WSChiaConnection
+from spare.server.ws_connection import WSSpareConnection
 from spare.types.blockchain_format.proof_of_space import (
     ProofOfSpace,
     calculate_pos_challenge,
@@ -36,7 +36,7 @@ class HarvesterAPI:
 
     @api_request(peer_required=True)
     async def harvester_handshake(
-        self, harvester_handshake: harvester_protocol.HarvesterHandshake, peer: WSChiaConnection
+        self, harvester_handshake: harvester_protocol.HarvesterHandshake, peer: WSSpareConnection
     ) -> None:
         """
         Handshake between the harvester and farmer. The harvester receives the pool public keys,
@@ -52,7 +52,7 @@ class HarvesterAPI:
 
     @api_request(peer_required=True)
     async def new_signage_point_harvester(
-        self, new_challenge: harvester_protocol.NewSignagePointHarvester, peer: WSChiaConnection
+        self, new_challenge: harvester_protocol.NewSignagePointHarvester, peer: WSSpareConnection
     ) -> None:
         """
         The harvester receives a new signage point from the farmer, this happens at the start of each slot.
